@@ -1,0 +1,11 @@
+/target
+target
+sets
+ListOfCardDataFiles*.txt
+formats.txt
+output.txt
+*.swp
+*.swo
+decks
+hints.txt
+*.dek
