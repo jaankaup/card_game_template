@@ -2,7 +2,9 @@ use dioxus_desktop::Config;
 use dioxus::prelude::*;
 use card_game_gui::components::{StartupProps, HeaderComponent, CardComponent, Card};
 use card_game_gui::meta_components::{UIDisplay};
-
+use card_game_gui::misc::loadFile;
+use card_game_gui::xml_parser::{CardDataFiles, FilesToInclude};
+use hard_xml::XmlRead;
 
 const MAIN_CONTAINER_STYLE: &str = r#"
     display: contents;
@@ -50,12 +52,16 @@ const THE_REST_CONTAINER_STYLE: &str = r#"
 fn main() {
     println!("{:?}", UIDisplay::INLINE_BLOCK);
 
-    // Create initial data to the application.
-    let initial_props = StartupProps {
-        application_name: "My application".to_owned(),    
-    };
+    let joo = loadFile("ListOfCardDataFiles.txt").unwrap();
+    let heko = CardDataFiles::from_str(&joo).unwrap(); 
+    println!("{:?}", heko);
 
-    dioxus_desktop::launch_with_props(MainView, initial_props, Config::new());
+    // Create initial data to the application.
+    // let initial_props = StartupProps {
+    //     application_name: "My application".to_owned(),    
+    // };
+
+    // dioxus_desktop::launch_with_props(MainView, initial_props, Config::new());
 }
 
 /// The main component of the application.
