@@ -19,14 +19,14 @@ use hard_xml::{XmlRead, XmlWrite};
 #[xml(tag = "listofcarddatafiles")]
 pub struct CardDataFiles<'a> {
     #[xml(child = "filetoinclude")]
-    files: Vec<FilesToInclude<'a>>,
+    pub files: Vec<FileToInclude<'a>>,
 }
 
 #[derive(XmlWrite, XmlRead, PartialEq, Debug)]
 #[xml(tag = "filetoinclude")]
-pub struct FilesToInclude<'a> {
+pub struct FileToInclude<'a> {
     #[xml(text)]
-    text: Cow<'a, str>,
+    pub text: Cow<'a, str>,
 }
 
 // fn main() {

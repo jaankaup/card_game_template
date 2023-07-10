@@ -3,7 +3,8 @@ use dioxus::prelude::*;
 use card_game_gui::components::{StartupProps, HeaderComponent, CardComponent, Card};
 use card_game_gui::meta_components::{UIDisplay};
 use card_game_gui::misc::loadFile;
-use card_game_gui::xml_parser::{CardDataFiles, FilesToInclude};
+use card_game_gui::xml_parser::{CardDataFiles, FileToInclude};
+use card_game_gui::resource_loader::loadMtgCards;
 use hard_xml::XmlRead;
 
 const MAIN_CONTAINER_STYLE: &str = r#"
@@ -52,10 +53,11 @@ const THE_REST_CONTAINER_STYLE: &str = r#"
 fn main() {
     println!("{:?}", UIDisplay::INLINE_BLOCK);
 
-    let joo = loadFile("ListOfCardDataFiles.txt").unwrap();
-    let heko = CardDataFiles::from_str(&joo).unwrap(); 
-    println!("{:?}", heko);
+    // let joo = loadFile("ListOfCardDataFiles.txt").unwrap();
+    // let heko = CardDataFiles::from_str(&joo).unwrap(); 
+    // println!("{:?}", heko);
 
+    loadMtgCards();
     // Create initial data to the application.
     // let initial_props = StartupProps {
     //     application_name: "My application".to_owned(),    
