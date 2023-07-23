@@ -1,9 +1,12 @@
 use dioxus::prelude::*;
+use crate::resource_loader::MtgCard;
 
 /// Properties that are given to the main application.
 #[derive(PartialEq, Props)]
 pub struct StartupProps {
     pub application_name: String,
+    pub mtg_cards: Vec<MtgCard>,
+    pub errors: String,
 }
 
 const HEADER_STYLE: &str = r#"

@@ -6,6 +6,7 @@ use card_game_gui::misc::loadFile;
 use card_game_gui::xml_parser::{CardDataFiles, FileToInclude};
 use card_game_gui::resource_loader::load_mtg_cards;
 use hard_xml::XmlRead;
+use card_game_gui::resource_loader::MtgCard;
 
 const MAIN_CONTAINER_STYLE: &str = r#"
     display: contents;
@@ -53,24 +54,29 @@ const THE_REST_CONTAINER_STYLE: &str = r#"
 fn main() {
     println!("{:?}", UIDisplay::INLINE_BLOCK);
 
-    // let joo = loadFile("ListOfCardDataFiles.txt").unwrap();
-    // let heko = CardDataFiles::from_str(&joo).unwrap(); 
-    // println!("{:?}", heko);
+    let mut errors = String::new();
+    let mtg_cards: Vec<MtgCard>;
 
-    load_mtg_cards();
-    // Create initial data to the application.
-    // let initial_props = StartupProps {
-    //     application_name: "My application".to_owned(),    
-    // };
+    let card_load_result = load_mtg_cards(); //.unwrap_or_else(|_| Vec<MtgCard>::new());
 
-    // dioxus_desktop::launch_with_props(MainView, initial_props, Config::new());
+    match card_load_result {
+        Ok(cards) => { mtg_cards = cards; },
+        Err(err) => { errors = err; mtg_cards = Vec::<MtgCard>::new(); },
+    }
+
+    let initial_props = StartupProps {
+        application_name: "Mtg booster generator".to_string(),
+        mtg_cards: mtg_cards,
+        errors: errors,
+    };
+    
+    dioxus_desktop::launch_with_props(MainView, initial_props, Config::new());
 }
 
 /// The main component of the application.
 #[allow(non_snake_case)]
 fn MainView(cx: Scope<StartupProps>) -> Element {
 
-    let app_name = use_state(cx, || cx.props.application_name.to_owned()); 
     let text = use_state(cx, || vec!["erkki".to_string(), "jooseppi".to_string(), "exit".to_string()]); 
 
     cx.render(rsx! {
@@ -84,7 +90,7 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
             }
             div {
                 style: "{THE_REST_CONTAINER_STYLE}", 
-                "{app_name.get()}",
+                "{cx.props.application_name}",
                 CardComponent { card: &Card { pos_x: 550, pos_y: 135, } },
             }
         }

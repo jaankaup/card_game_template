@@ -1,3 +1,4 @@
+use dioxus::prelude::*;
 use std::fs::{File, read_to_string};
 use std::io::{self, prelude::*, BufReader};
 use crate::xml_parser::{CardDataFiles, FileToInclude};
@@ -5,7 +6,8 @@ use crate::misc::loadFile;
 use hard_xml::XmlRead;
 
 
-#[derive(Debug)]
+//#[derive(Debug, PartialEq, Props)]
+#[derive(Debug, PartialEq)]
 pub struct MtgCard {
     name: String,
     set: String,
@@ -28,15 +30,15 @@ pub struct MtgCard {
 /// Load all mtg cards.
 pub fn load_mtg_cards() -> Result<Vec<MtgCard>, String> {
 
-    let mut result: Vec<MtgCard> = Vec::new();
+    let mut result: Vec<MtgCard> = Vec::with_capacity(60000);
     let mut error = String::new();
 
     let file_str = loadFile("ListOfCardDataFiles.txt").map_err(|_| "Failed to load file 'ListOfCardDataFiles.txt'".to_string())?;
     let card_files = CardDataFiles::from_str(&file_str).map_err(|_|"Failed to parse file 'ListOfCardDataFiles.txt'".to_string())?;
 
     for dataFile in card_files.files.iter() {
-        let file = String::from("sets/") + &dataFile.text; //.push_str(&dataFile.text); 
-        parse_mtg_cards(&mut result, &file)?;
+        let file = String::from("sets/") + &dataFile.text;
+        parse_mtg_cards(&mut result, &file);
     }
 
     Ok(result)
@@ -52,11 +54,7 @@ fn parse_mtg_cards(cards: &mut Vec<MtgCard>, file: &str) -> Result<(), String> {
         if let Some(card) = parse_mtg_card(&s) {
             cards.push(card);
         }
-        else {
-            result = Err(String::from(format!("Failed to parse card from file '{:?}' line \n {:?}", file, s))); 
-        }
     }
-
     result
 }
 
