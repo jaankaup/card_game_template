@@ -4,7 +4,7 @@ use card_game_gui::components::{StartupProps, HeaderComponent, CardComponent, Ca
 use card_game_gui::meta_components::{UIDisplay};
 use card_game_gui::misc::loadFile;
 use card_game_gui::xml_parser::{CardDataFiles, FileToInclude};
-use card_game_gui::resource_loader::loadMtgCards;
+use card_game_gui::resource_loader::load_mtg_cards;
 use hard_xml::XmlRead;
 
 const MAIN_CONTAINER_STYLE: &str = r#"
@@ -57,7 +57,7 @@ fn main() {
     // let heko = CardDataFiles::from_str(&joo).unwrap(); 
     // println!("{:?}", heko);
 
-    loadMtgCards();
+    load_mtg_cards();
     // Create initial data to the application.
     // let initial_props = StartupProps {
     //     application_name: "My application".to_owned(),    

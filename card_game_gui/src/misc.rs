@@ -4,20 +4,9 @@ use std::io::Read;
 use std::fs::File;
 
 /// Load file and return the content as String.
-pub fn loadFile(filename: &str) -> Result<String, io::Error> {
+pub fn loadFile(filename: &str) -> io::Result<String> { // Result<String, io::Error> {
     let mut buffer = String::new();
-    let mut f = File::open(filename);
-    let result = match f {
-        Ok(mut file) => {
-            println!("File {:?} loaded.", filename);
-            file.read_to_string(&mut buffer);
-        }
-        Err(e) => {
-            if e.kind() == ErrorKind::NotFound {
-                println!("File {:?} not found.", filename);
-            }
-            return Err(e);
-        }
-    };
+    let mut file = File::open(filename)?;
+    file.read_to_string(&mut buffer);
     Ok(buffer)
 }
