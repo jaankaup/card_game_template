@@ -9,11 +9,10 @@ use hard_xml::XmlRead;
 use card_game_gui::resource_loader::MtgCard;
 
 const MAIN_CONTAINER_STYLE: &str = r#"
-    display: contents;
+    display: flex;
     position: relative;
     color: red;
-    background-color: rgb(235,235, 255);
-    position: relative;
+    background-color: orange;
     align-items: left;
     height: 100%;
     width: 100%;
@@ -27,7 +26,7 @@ const HEADER_CONTAINER_STYLE: &str = r#"
     display: flex;
     flex-direction: column;
     color: red;
-    background-color: rgb(235,235, 255);
+    background-color: rgb(235,235, 55);
     position: relative;
     align-items: left;
     height: 50px;
@@ -42,10 +41,10 @@ const THE_REST_CONTAINER_STYLE: &str = r#"
     display: flex;
     flex-direction: column;
     color: black;
-    background-color: rgb(35,235, 255);
+    background-color: black;
     align-items: left;
     border: 1px solid red;
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
     bottom: 0;
@@ -57,7 +56,7 @@ fn main() {
     let mut errors = String::new();
     let mtg_cards: Vec<MtgCard>;
 
-    let card_load_result = load_mtg_cards(); //.unwrap_or_else(|_| Vec<MtgCard>::new());
+    let card_load_result = load_mtg_cards();
 
     match card_load_result {
         Ok(cards) => { mtg_cards = cards; },
@@ -78,6 +77,7 @@ fn main() {
 fn MainView(cx: Scope<StartupProps>) -> Element {
 
     let text = use_state(cx, || vec!["erkki".to_string(), "jooseppi".to_string(), "exit".to_string()]); 
+    let cards = use_state(cx, || cx.props.mtg_cards.clone());
 
     cx.render(rsx! {
 
@@ -91,7 +91,25 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
             div {
                 style: "{THE_REST_CONTAINER_STYLE}", 
                 "{cx.props.application_name}",
-                CardComponent { card: &Card { pos_x: 550, pos_y: 135, } },
+                td {
+                    // map! {
+                    //     cards.iter().enumerate().map(|(i, card)| {
+                    //         CardComponent { card: card }
+                    //     })
+                    // }
+                    tr { "hekotus" },
+                    tr { "hekotus2" },
+                    tr { "hekotus2" },
+                    tr { "hekotus2" },
+                    tr { "hekotus2" },
+                    tr { "hekotus2" },
+                    tr { "hekotus2" },
+                    tr { "hekotus2" },
+                    tr { "hekotus2" },
+                    tr { "hekotus2" },
+                }
+
+                // CardComponent { card: &Card { pos_x: 550, pos_y: 135, } },
             }
         }
     })

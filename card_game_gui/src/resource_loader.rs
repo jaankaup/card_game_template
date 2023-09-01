@@ -7,7 +7,7 @@ use hard_xml::XmlRead;
 
 
 //#[derive(Debug, PartialEq, Props)]
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub struct MtgCard {
     name: String,
     set: String,
