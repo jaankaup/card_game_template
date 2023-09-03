@@ -1,0 +1,12 @@
+margin: 0;
+padding: 0;
+display: flex;
+flex-direction: column;
+flex-grow: 1;
+color: white;
+background-color: darkblue;
+border: 1px solid yellow;
+position: relative;
+width: 100%;
+height: 50%;
+bottom: 0;

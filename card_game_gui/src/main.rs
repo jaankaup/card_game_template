@@ -52,6 +52,24 @@ const THE_REST_CONTAINER_STYLE: &str = r#"
     bottom: 0;
    "#;
 
+struct CssThings {
+    main_css_style: String,
+    header_css_style: String,
+    the_rest_css_style: String,
+}
+
+fn loadCss() -> CssThings  {
+    let main_css_file = loadFile("css/main_css_file.css").unwrap();
+    let header_css_file = loadFile("css/header_css_file.css").unwrap();
+    let the_rest_css_file = loadFile("css/the_rest_css_file.css").unwrap();
+    CssThings {
+        main_css_style: main_css_file,
+        header_css_style: header_css_file,
+        the_rest_css_style: the_rest_css_file,
+    }
+}
+
+
 fn main() {
     println!("{:?}", UIDisplay::INLINE_BLOCK);
 
@@ -85,10 +103,12 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
     let text = use_state(cx, || vec!["erkki".to_string(), "jooseppi".to_string(), "exit".to_string()]); 
     let cards = use_state(cx, || cx.props.mtg_cards.clone());
     let mainStyle = use_state(cx, || MAIN_CONTAINER_STYLE.to_string());
+    let css_things = use_state(cx, || loadCss());
     let handle_key_down_event = move |evt: KeyboardEvent| 
         match evt.code() {
             Code::Space => {
-                println!("Space pressed");
+                println!("Reloading css file.");
+                css_things.set(loadCss());
             }
             _ => {  },
         };
@@ -96,20 +116,21 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
     cx.render(rsx! {
 
         // Top level layout.
-        div {
+        body {
             tabindex: "0",
             autofocus: "true",
-            style: "{mainStyle}", 
+            style: "{(*css_things.get()).main_css_style}",
             onkeydown: handle_key_down_event,
             onkeypress: handle_key_down_event,
             onkeyup: handle_key_down_event,
             onclick: move |_| { println!("Jeejee"); },
                 
             div {
-                style: "{HEADER_CONTAINER_STYLE}", onkeydown: handle_key_down_event,
+                style: "{(*css_things.get()).header_css_style}",
+                onkeydown: handle_key_down_event,
             }
             div {
-                style: "{THE_REST_CONTAINER_STYLE}", 
+                style: "{(*css_things.get()).the_rest_css_style}",
                 onkeydown: handle_key_down_event,
                 "{cx.props.application_name}",
                 td {
