@@ -1,4 +1,6 @@
-use dioxus_desktop::Config;
+use dioxus_html::input_data::keyboard_types::Code;
+use dioxus_desktop::{Config, WindowBuilder};
+use dioxus::prelude::*;
 use dioxus::prelude::*;
 use card_game_gui::components::{StartupProps, HeaderComponent, CardComponent, Card};
 use card_game_gui::meta_components::{UIDisplay};
@@ -26,7 +28,7 @@ const HEADER_CONTAINER_STYLE: &str = r#"
     display: flex;
     flex-direction: column;
     color: red;
-    background-color: rgb(235,235, 55);
+    background-color: red;
     position: relative;
     align-items: left;
     height: 50px;
@@ -37,7 +39,7 @@ const HEADER_CONTAINER_STYLE: &str = r#"
 const THE_REST_CONTAINER_STYLE: &str = r#"
     margin: 0;
     padding: 0;
-    top: 50px;
+    top: 250px;
     display: flex;
     flex-direction: column;
     color: black;
@@ -69,7 +71,11 @@ fn main() {
         errors: errors,
     };
     
-    dioxus_desktop::launch_with_props(MainView, initial_props, Config::new());
+    let config = Config::new().with_window(WindowBuilder::default().with_title("Mtg booster generator")
+                                           .with_inner_size(dioxus_desktop::LogicalSize::new(1000, 1000))
+                                          );  
+    
+    dioxus_desktop::launch_with_props(MainView, initial_props, config);
 }
 
 /// The main component of the application.
@@ -78,25 +84,35 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
 
     let text = use_state(cx, || vec!["erkki".to_string(), "jooseppi".to_string(), "exit".to_string()]); 
     let cards = use_state(cx, || cx.props.mtg_cards.clone());
+    let mainStyle = use_state(cx, || MAIN_CONTAINER_STYLE.to_string());
+    let handle_key_down_event = move |evt: KeyboardEvent| 
+        match evt.code() {
+            Code::Space => {
+                println!("Space pressed");
+            }
+            _ => {  },
+        };
 
     cx.render(rsx! {
 
         // Top level layout.
         div {
-            style: "{MAIN_CONTAINER_STYLE}", 
+            tabindex: "0",
+            autofocus: "true",
+            style: "{mainStyle}", 
+            onkeydown: handle_key_down_event,
+            onkeypress: handle_key_down_event,
+            onkeyup: handle_key_down_event,
+            onclick: move |_| { println!("Jeejee"); },
+                
             div {
-                style: "{HEADER_CONTAINER_STYLE}", 
-                HeaderComponent { some_text: text.get() },
+                style: "{HEADER_CONTAINER_STYLE}", onkeydown: handle_key_down_event,
             }
             div {
                 style: "{THE_REST_CONTAINER_STYLE}", 
+                onkeydown: handle_key_down_event,
                 "{cx.props.application_name}",
                 td {
-                    // map! {
-                    //     cards.iter().enumerate().map(|(i, card)| {
-                    //         CardComponent { card: card }
-                    //     })
-                    // }
                     tr { "hekotus" },
                     tr { "hekotus2" },
                     tr { "hekotus2" },
@@ -109,7 +125,6 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
                     tr { "hekotus2" },
                 }
 
-                // CardComponent { card: &Card { pos_x: 550, pos_y: 135, } },
             }
         }
     })

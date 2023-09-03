@@ -15,7 +15,7 @@ pub enum UIDisplay {
 
     // Box generation
     NONE, 
-    CONTENTS, 
+    CONTENTS,
 
     // Multi-keyword
     //BLOCK_FLOW, 
