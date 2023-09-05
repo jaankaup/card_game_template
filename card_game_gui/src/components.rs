@@ -21,15 +21,44 @@ const HEADER_STYLE: &str = r#"
    "#;
 
 const TEXT_STYLE: &str = r#"
-    background-color: blue;
+    display: block;
+    width: 180px;
+    height: 20px;
+    color: white;
+    align-items: left;
+    border: 1px solid black;
+    margin: 1px;
+    padding: 1px;
    "#;
+
 
 const CARD_STYLE: &str = r#"
     background-color: yellow;
-    position: fixed;
+    position: absolute;
     width: 100px;
     height: 200px;
    "#;
+
+const SYMBOL_STYLE: &str = r#"
+    background-color: yellow;
+    width: 20px;
+    height: 20px;
+   "#;
+
+#[inline_props]
+pub fn HeaderButton(cx: Scope, text: String) -> Element {
+
+    let color = use_state(&cx, || "darkblue");
+    cx.render(rsx! {
+        button {
+            style: "{TEXT_STYLE}",
+            background: {*color.get()},
+            onmousedown: move |_| {color.set("blue");},
+            onmouseup: move |_| {color.set("darkblue");},
+            text.to_owned(),
+        }
+    })
+}
 
 /// The main application header. 
 #[allow(non_snake_case)]
