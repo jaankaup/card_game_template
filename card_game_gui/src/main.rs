@@ -9,7 +9,8 @@ use card_game_gui::xml_parser::{CardDataFiles, FileToInclude};
 use card_game_gui::resource_loader::load_mtg_cards;
 use card_game_gui::mana_symbol::{ManaSymbol, ManaType};
 use hard_xml::XmlRead;
-use card_game_gui::resource_loader::MtgCard;
+// use card_game_gui::resource_loader::MtgCard;
+use card_game_gui::mtg_card::{MtgCard, CardImage};
 
 struct CssThings {
     main_css_style: String,
@@ -65,6 +66,12 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
     let text = use_state(cx, || vec!["erkki".to_string(), "jooseppi".to_string(), "exit".to_string()]); 
     let cards = use_state(cx, || cx.props.mtg_cards.clone());
     let css_things = use_state(cx, || loadCss());
+    let white_checked = use_ref(cx, || false);
+    let black_checked = use_ref(cx, || false);
+    let red_checked = use_ref(cx, || false);
+    let blue_checked = use_ref(cx, || false);
+    let green_checked = use_ref(cx, || false);
+
     let handle_key_down_event = move |evt: KeyboardEvent| 
         match evt.code() {
             Code::Space => {
@@ -122,11 +129,14 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
                     // img {
                     //     src: "circle-heat.svg",
                     // }
-                    ManaSymbol { mana_type: ManaType::Plains,},
-                    ManaSymbol { mana_type: ManaType::Mountain,},
-                    ManaSymbol { mana_type: ManaType::Forest,},
-                    ManaSymbol { mana_type: ManaType::Island,},
-                    ManaSymbol { mana_type: ManaType::Swamp,},
+                    ManaSymbol { mana_type: ManaType::Plains, on_clicked: move |event: bool | { white_checked.set(event) } },
+                    ManaSymbol { mana_type: ManaType::Mountain, on_clicked: move |event: bool | { red_checked.set(event) } },
+                    ManaSymbol { mana_type: ManaType::Forest, on_clicked: move |event: bool | { green_checked.set(event) } },
+                    ManaSymbol { mana_type: ManaType::Island, on_clicked: move |event: bool | { blue_checked.set(event) } },
+                    ManaSymbol { mana_type: ManaType::Swamp, on_clicked: move |event: bool | { black_checked.set(event) } },
+                    for i in 0..100 {
+                        CardImage { mtg_card: &cards.get()[i] } 
+                    }
                 }
             }
         }

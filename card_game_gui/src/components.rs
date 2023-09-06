@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use crate::resource_loader::MtgCard;
+use crate::mtg_card::MtgCard;
 
 /// Properties that are given to the main application.
 #[derive(PartialEq, Props)]

@@ -3,29 +3,8 @@ use std::fs::{File, read_to_string};
 use std::io::{self, prelude::*, BufReader};
 use crate::xml_parser::{CardDataFiles, FileToInclude};
 use crate::misc::loadFile;
+use crate::mtg_card::MtgCard;
 use hard_xml::XmlRead;
-
-
-//#[derive(Debug, PartialEq, Props)]
-#[derive(Debug, PartialEq, Clone)]
-pub struct MtgCard {
-    name: String,
-    set: String,
-    image: String,
-    color: String,
-    color_id: String,
-    cost: String,
-    mana_value: String,
-    card_type: String,
-    power: String,
-    thoughness: String,
-    loyalty: String,
-    rarity: String,
-    draft_qualities: String,
-    sound: String,
-    script: String,
-    text: String,
-}
 
 /// Load all mtg cards.
 pub fn load_mtg_cards() -> Result<Vec<MtgCard>, String> {
@@ -51,38 +30,38 @@ fn parse_mtg_cards(cards: &mut Vec<MtgCard>, file: &str) -> Result<(), String> {
 
     let mut result: Result<(), String> = Ok(());
     for s in src.lines() {
-        if let Some(card) = parse_mtg_card(&s) {
+        if let Some(card) = MtgCard::parse(&s) {
             cards.push(card);
         }
     }
     result
 }
 
-/// Parse a single mtg card from given input str.
-fn parse_mtg_card(input: &str) -> Option<MtgCard> { // -> Result<MtgCard, &'static str> {
-    let splitted = input.split('\t').collect::<Vec<&str>>(); 
-
-    // Check the actual len
-    if splitted.len() != 17 { None } 
-    else {
-        Some(MtgCard {
-                name: splitted[0].to_owned(),
-                set: splitted[1].to_owned(),
-                image: splitted[2].to_owned(),
-                color: splitted[3].to_owned(),
-                color_id: splitted[4].to_owned(),
-                cost: splitted[5].to_owned(),
-                mana_value: splitted[6].to_owned(),
-                card_type: splitted[7].to_owned(),
-                power: splitted[8].to_owned(),
-                thoughness: splitted[9].to_owned(),
-                loyalty: splitted[10].to_owned(),
-                rarity: splitted[11].to_owned(),
-                draft_qualities: splitted[12].to_owned(),
-                sound: splitted[13].to_owned(),
-                script: splitted[14].to_owned(),
-                text: splitted[15].to_owned(),
-            }
-       )
-    }
-}
+// /// Parse a single mtg card from given input str.
+// fn parse_mtg_card(input: &str) -> Option<MtgCard> { // -> Result<MtgCard, &'static str> {
+//     let splitted = input.split('\t').collect::<Vec<&str>>(); 
+// 
+//     // Check the actual len
+//     if splitted.len() != 17 { None } 
+//     else {
+//         Some(MtgCard {
+//                 name: splitted[0].to_owned(),
+//                 set: splitted[1].to_owned(),
+//                 image: splitted[2].to_owned(),
+//                 color: splitted[3].to_owned(),
+//                 color_id: splitted[4].to_owned(),
+//                 cost: splitted[5].to_owned(),
+//                 mana_value: splitted[6].to_owned(),
+//                 card_type: splitted[7].to_owned(),
+//                 power: splitted[8].to_owned(),
+//                 thoughness: splitted[9].to_owned(),
+//                 loyalty: splitted[10].to_owned(),
+//                 rarity: splitted[11].to_owned(),
+//                 draft_qualities: splitted[12].to_owned(),
+//                 sound: splitted[13].to_owned(),
+//                 script: splitted[14].to_owned(),
+//                 text: splitted[15].to_owned(),
+//             }
+//        )
+//     }
+// }

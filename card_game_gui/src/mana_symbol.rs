@@ -1,3 +1,4 @@
+use std::rc::Rc;
 use dioxus::prelude::*;
 /// Excellent mtg symbols created by (Goblin Hero) https://www.slightlymagic.net/forum/viewtopic.php?t=4430.
 
@@ -23,21 +24,22 @@ const VIEW_BOX: &str = "0 0 100 100";
 const ENABLE_BACKGROUND: &str = "new -945 -210.002 1045 730.002";
 
 #[inline_props]
-pub fn ManaSymbol(cx: Scope, mana_type: ManaType) -> Element {
+pub fn ManaSymbol<'a>(cx: Scope<'a>, mana_type: ManaType, on_clicked: EventHandler<'a, bool>) -> Element<'a> {
 
-    // Indicate if mana is selected.
-    let selected = use_state(&cx, || true);
+    // Indicate if mana symbol is selected.
+    let selected = use_state(&cx, || false);
 
     // PLAINS
     if *mana_type == ManaType::Plains {
         cx.render(rsx!(
                 svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
-
+                    // onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); if *selected.get() {println!("Selected");} else { println!("Not selected");}},
+                    onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(525,0)",
                         circle { fill: "#F8F6D8", cx: "-475", cy: "50", r: "50", } 
                     path {
-                        fill: "#0D0F0F", d: "M-427.309,57.064c-6.561-3.699-10.768-5.551-12.617-5.551c-1.344,0-2.395,1.032-3.154,3.092
+                        fill: if *selected.get() {"#0D0F0F"} else {"#AAAAAA"}, d: "M-427.309,57.064c-6.561-3.699-10.768-5.551-12.617-5.551c-1.344,0-2.395,1.032-3.154,3.092
                     	c-0.758,2.063-2.27,3.09-4.541,3.09c-0.926,0-2.818-0.336-5.678-1.008c-1.598,2.44-2.398,3.996-2.398,4.668
                     	c0,0.926,0.689,2.016,2.064,3.281c1.375,1.262,2.535,1.891,3.482,1.891c0.602,0,1.416-0.125,2.449-0.379
                     	c1.031-0.25,1.721-0.377,2.064-0.377c1.033,0,1.547,1.893,1.547,5.678c0,3.617-0.84,9.168-2.523,16.654
@@ -78,11 +80,13 @@ pub fn ManaSymbol(cx: Scope, mana_type: ManaType) -> Element {
     else if *mana_type == ManaType::Island {
         cx.render(rsx!(
                 svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                    onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(420,0)",
                         circle { fill: "#C1D7E9", cx: "-370", cy: "50", r: "50", }
                         path {
-                            fill: "#0D0F0F", d: "M-352.512,83.719c-4.787,4.871-10.684,7.307-17.688,7.307c-7.861,0-14.098-2.69-18.711-8.073
+                            fill: if *selected.get() {"#0D0F0F"} else {"#AAAAAA"},
+                            d: "M-352.512,83.719c-4.787,4.871-10.684,7.307-17.688,7.307c-7.861,0-14.098-2.69-18.711-8.073
                                     c-4.359-5.127-6.537-11.662-6.537-19.606c0-8.543,3.717-18.286,11.15-29.224c6.064-8.969,13.199-16.83,21.402-23.58
                                     c-1.197,5.469-1.793,9.355-1.793,11.662c0,5.299,1.664,10.467,4.996,15.508c4.102,5.98,7.219,10.426,9.357,13.328
                                     c3.332,5.043,4.998,9.955,4.998,14.737C-345.336,72.871-347.729,78.852-352.512,83.719z M-352.641,56.357
@@ -95,11 +99,13 @@ pub fn ManaSymbol(cx: Scope, mana_type: ManaType) -> Element {
     else if *mana_type == ManaType::Swamp {
         cx.render(rsx!(
                 svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                    onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(315,0)",
                         circle { fill: "#BAB1AB", cx: "-265", cy: "49.998", r: "50", }
                         path {
-                            fill: "#0D0F0F", d: "M-224.305,48.619c0,5.518-2.008,9.281-6.02,11.287c-1.172,0.586-4.85,1.379-11.037,2.383
+                            fill: if *selected.get() {"#0D0F0F"} else {"#AAAAAA"},
+                            d: "M-224.305,48.619c0,5.518-2.008,9.281-6.02,11.287c-1.172,0.586-4.85,1.379-11.037,2.383
                                     c-4.012,0.67-6.018,2.217-6.018,4.639v10.158c0,0.422,0.125,1.715,0.375,3.889l0.377,4.014c0,1.255-0.293,3.306-0.879,6.146
                                     c-1.588,0.334-3.428,0.709-5.518,1.132c-0.67-2.511-1.004-4.224-1.004-5.146c0-0.416,0.105-1.045,0.313-1.882
                                     c0.207-0.834,0.316-1.461,0.316-1.883c0-0.58-0.52-2.213-1.559-4.887h-1.945c-0.258,0.418-0.344,0.961-0.26,1.629
@@ -132,10 +138,13 @@ pub fn ManaSymbol(cx: Scope, mana_type: ManaType) -> Element {
     else if *mana_type == ManaType::Mountain {
         cx.render(rsx!(
                 svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                    onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(210,0)",
                         circle { fill: "#E49977", cx: "-160", cy: "50", r: "50", }
-                                 path { fill: "#0D0F0F", d: "M-118.035,66.617c-3.736,8.912-11.16,13.367-22.275,13.367c-2.037,0-4.246,0.254-6.621,0.762
+                                 path {
+                                 fill: if *selected.get() {"#0D0F0F"} else {"#AAAAAA"},
+                                 d: "M-118.035,66.617c-3.736,8.912-11.16,13.367-22.275,13.367c-2.037,0-4.246,0.254-6.621,0.762
                                                 c-3.564,0.764-5.346,1.828-5.346,3.186c0,0.424,0.295,0.91,0.891,1.463c0.592,0.553,1.104,0.826,1.527,0.826
                                                 c-2.123,0-0.68,0.064,4.326,0.191c5.008,0.127,8.148,0.191,9.422,0.191c-7.383,4.326-19.732,6.319-37.043,5.981
                                                 c-5.688-0.084-10.566-2.588-14.639-7.51c-3.992-4.669-5.984-9.888-5.984-15.658c0-6.108,2.057-11.308,6.176-15.595
@@ -168,12 +177,15 @@ pub fn ManaSymbol(cx: Scope, mana_type: ManaType) -> Element {
     else {
         cx.render(rsx!(
                 svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                    onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(105,0)",
                         path { fill: "#A3C095", d: "M-5,49.998C-5,77.613-27.385,100-55.002,100C-82.615,100-105,77.613-105,49.998
                                                     C-105,22.385-82.615,0-55.002,0C-27.385,0-5,22.385-5,49.998z",
                         }
-                        path { fill: "#0D0F0F", d: "M-11.238,56.225c0,1.668-0.645,3.164-1.936,4.498c-1.289,1.332-2.77,1.998-4.436,1.998
+                        path {
+                            fill: if *selected.get() {"#0D0F0F"} else {"#AAAAAA"},
+                            d: "M-11.238,56.225c0,1.668-0.645,3.164-1.936,4.498c-1.289,1.332-2.77,1.998-4.436,1.998
                                         c-2.662,0-4.623-1.25-5.869-3.748l-5.871-0.25c-1.252,0-3.709,0.543-7.371,1.625c-3.914,1.082-6.164,1.957-6.746,2.623
                                         c-0.916,0.998-1.664,3.332-2.248,6.996c-0.502,2.998-0.748,5.205-0.748,6.621c0,2.246,0.352,3.893,1.061,4.934
                                         s2.166,1.916,4.371,2.623c2.205,0.707,3.561,1.104,4.061,1.187c0.332,0,0.873-0.041,1.625-0.125h1.498c1.08,0,2.205,0.17,3.373,0.5
