@@ -5,3 +5,5 @@ pub mod misc;
 pub mod resource_loader;
 pub mod mana_symbol;
 pub mod mtg_card;
+pub mod booster;
+pub mod window_view_icon;

@@ -11,6 +11,15 @@ use card_game_gui::mana_symbol::{ManaSymbol, ManaType};
 use hard_xml::XmlRead;
 // use card_game_gui::resource_loader::MtgCard;
 use card_game_gui::mtg_card::{MtgCard, CardImage};
+use card_game_gui::window_view_icon::WindowViewIcon;
+
+pub enum MainWindowState {
+    Loading,
+    BoosterShop,
+    DeckView,
+    RandomParametrs,
+    DeckEditor,
+}
 
 struct CssThings {
     main_css_style: String,
@@ -63,7 +72,7 @@ fn main() {
 #[allow(non_snake_case)]
 fn MainView(cx: Scope<StartupProps>) -> Element {
 
-    let text = use_state(cx, || vec!["erkki".to_string(), "jooseppi".to_string(), "exit".to_string()]); 
+    let main_window_state = use_state(cx, || MainWindowState::BoosterShop); 
     let cards = use_state(cx, || cx.props.mtg_cards.clone());
     let css_things = use_state(cx, || loadCss());
     let white_checked = use_ref(cx, || false);
@@ -94,41 +103,24 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
             div {
                 style: "{(*css_things.get()).header_css_style}",
                 onkeydown: handle_key_down_event,
-                HeaderButton {
-                    text: "Load deck".to_string(),                    
-                },
-                HeaderButton {
-                    text: "Save deck".to_string(),                    
-                },
-                HeaderButton {
-                    text: "Buy boosters".to_string(),                    
-                },
-                HeaderButton {
-                    text: "Generate random deck".to_string(),                    
-                },
-                HeaderButton {
-                    text: "Clear".to_string(),                    
-                },
+                HeaderButton { text: "Load deck".to_string(), },
+                HeaderButton { text: "Save deck".to_string(), },
+                HeaderButton { text: "Buy boosters".to_string(), },
+                HeaderButton { text: "Generate random deck".to_string(), },
+                HeaderButton { text: "Clear".to_string(), },
+                div {
+
+                    display: "flex",
+                    flex_flow: "row-reverse",
+                    background_color: "yellow",
+                    width: "100%",
+                    WindowViewIcon { text: "Yeah".to_string() },
+                }
             }
             div {
                 style: "{(*css_things.get()).the_rest_css_style}",
                 onkeydown: handle_key_down_event,
                 td {
-                    // CardComponent {
-                    //     card: &Card {
-                    //         pos_x: 400,                            
-                    //         pos_y: 300,                            
-                    //     }
-                    // },
-                    // CardComponent {
-                    //     card: &Card {
-                    //         pos_x: 600,                            
-                    //         pos_y: 500,                            
-                    //     }
-                    // },
-                    // img {
-                    //     src: "circle-heat.svg",
-                    // }
                     ManaSymbol { mana_type: ManaType::Plains, on_clicked: move |event: bool | { white_checked.set(event) } },
                     ManaSymbol { mana_type: ManaType::Mountain, on_clicked: move |event: bool | { red_checked.set(event) } },
                     ManaSymbol { mana_type: ManaType::Forest, on_clicked: move |event: bool | { green_checked.set(event) } },
