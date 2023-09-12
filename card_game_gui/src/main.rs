@@ -2,7 +2,15 @@ use dioxus_html::input_data::keyboard_types::Code;
 use dioxus_desktop::{Config, WindowBuilder};
 use dioxus::prelude::*;
 use dioxus::prelude::*;
-use card_game_gui::components::{StartupProps, HeaderComponent, CardComponent, Card, HeaderButton};
+use card_game_gui::components::{
+    StartupProps,
+    HeaderComponent,
+    CardComponent,
+    Card,
+    HeaderButton,
+    MainWindowState,
+    MainWindowStates,
+};
 use card_game_gui::meta_components::{UIDisplay};
 use card_game_gui::misc::loadFile;
 use card_game_gui::xml_parser::{CardDataFiles, FileToInclude};
@@ -12,14 +20,6 @@ use hard_xml::XmlRead;
 // use card_game_gui::resource_loader::MtgCard;
 use card_game_gui::mtg_card::{MtgCard, CardImage};
 use card_game_gui::window_view_icon::WindowViewIcon;
-
-pub enum MainWindowState {
-    Loading,
-    BoosterShop,
-    DeckView,
-    RandomParametrs,
-    DeckEditor,
-}
 
 struct CssThings {
     main_css_style: String,
@@ -72,7 +72,10 @@ fn main() {
 #[allow(non_snake_case)]
 fn MainView(cx: Scope<StartupProps>) -> Element {
 
-    let main_window_state = use_state(cx, || MainWindowState::BoosterShop); 
+    // Window state. TODO: use ref?
+    use_shared_state_provider(cx, || MainWindowStates(MainWindowState::DeckView)); 
+    let shared_window_state = use_shared_state::<MainWindowStates>(cx).unwrap();
+
     let cards = use_state(cx, || cx.props.mtg_cards.clone());
     let css_things = use_state(cx, || loadCss());
     let white_checked = use_ref(cx, || false);
@@ -103,29 +106,67 @@ fn MainView(cx: Scope<StartupProps>) -> Element {
             div {
                 style: "{(*css_things.get()).header_css_style}",
                 onkeydown: handle_key_down_event,
-                HeaderButton { text: "Load deck".to_string(), },
-                HeaderButton { text: "Save deck".to_string(), },
-                HeaderButton { text: "Buy boosters".to_string(), },
-                HeaderButton { text: "Generate random deck".to_string(), },
-                HeaderButton { text: "Clear".to_string(), },
-                div {
+                HeaderButton {
+                    text: "Load deck".to_string(),
+                },
+                HeaderButton {
+                    text: "Save deck".to_string(),
+                },
+                HeaderButton {
+                    text: "Generate random deck".to_string(),
+                },
+                HeaderButton {
+                    text: "Clear".to_string(),
+                },
 
+                if shared_window_state.read().0 == MainWindowState::BoosterShop {
+                    render! {
+                        HeaderButton {
+                            text: "Buy boosters".to_string(),
+                        },
+                    }
+                }
+                if shared_window_state.read().0 == MainWindowState::DeckView {
+                    render! {
+                        ManaSymbol { mana_type: ManaType::Plains, on_clicked: move |event: bool | { white_checked.set(event) } },
+                        ManaSymbol { mana_type: ManaType::Mountain, on_clicked: move |event: bool | { red_checked.set(event) } },
+                        ManaSymbol { mana_type: ManaType::Forest, on_clicked: move |event: bool | { green_checked.set(event) } },
+                        ManaSymbol { mana_type: ManaType::Island, on_clicked: move |event: bool | { blue_checked.set(event) } },
+                        ManaSymbol { mana_type: ManaType::Swamp, on_clicked: move |event: bool | { black_checked.set(event) } },
+                    }
+                }
+
+
+                // Window state icons.
+                div {
                     display: "flex",
                     flex_flow: "row-reverse",
                     background_color: "yellow",
                     width: "100%",
-                    WindowViewIcon { text: "Yeah".to_string() },
+                    WindowViewIcon {
+                        text: "Deck view".to_string(),
+                        window_state: MainWindowState::DeckView,
+                        // is_clicked: |evt: MouseEvent| { *shared_window_state.write = MainWindowState::DeckView; },
+                        // is_selected: shared_window_state.read().0 == MainWindowState::DeckView,
+                    },
+                    WindowViewIcon {
+                        text: "Random deck parameters".to_string(),
+                        window_state: MainWindowState::RandomParametrs,
+                        // is_clicked: |evt: MouseEvent| { *shared_window_state.write() = MainWindowState::RandomParametrs; },
+                        // is_selected: shared_window_state.read().0 == MainWindowState::RandomParametrs,
+                    },
+                    WindowViewIcon {
+                        text: "Booster shop view".to_string(),
+                        window_state: MainWindowState::BoosterShop,
+                        // is_clicked: |evt: MouseEvent| { *shared_window_state.write() = MainWindowState::BoosterShop; },
+                        // is_selected: shared_window_state.read().0 == MainWindowState::BoosterShop,
+                    },
                 }
             }
             div {
                 style: "{(*css_things.get()).the_rest_css_style}",
                 onkeydown: handle_key_down_event,
                 td {
-                    ManaSymbol { mana_type: ManaType::Plains, on_clicked: move |event: bool | { white_checked.set(event) } },
-                    ManaSymbol { mana_type: ManaType::Mountain, on_clicked: move |event: bool | { red_checked.set(event) } },
-                    ManaSymbol { mana_type: ManaType::Forest, on_clicked: move |event: bool | { green_checked.set(event) } },
-                    ManaSymbol { mana_type: ManaType::Island, on_clicked: move |event: bool | { blue_checked.set(event) } },
-                    ManaSymbol { mana_type: ManaType::Swamp, on_clicked: move |event: bool | { black_checked.set(event) } },
                     for i in 0..100 {
                         CardImage { mtg_card: &cards.get()[i] } 
                     }

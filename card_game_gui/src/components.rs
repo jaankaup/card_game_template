@@ -9,6 +9,21 @@ pub struct StartupProps {
     pub errors: String,
 }
 
+#[derive(PartialEq, Copy, Clone)]
+pub enum MainWindowState {
+    Loading,
+    BoosterShop,
+    DeckView,
+    RandomParametrs,
+    DeckEditor,
+}
+
+#[derive(PartialEq)]
+pub struct MainWindowStates(pub MainWindowState);
+// pub struct Points(pub f32);
+// pub struct SharedBoosters(pub Vec<Booster>);
+// pub struct SharedImageDimension(pub (u32, u32));
+
 const HEADER_STYLE: &str = r#"
     margin: 0;
     padding: 0;

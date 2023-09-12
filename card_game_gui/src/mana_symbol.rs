@@ -32,7 +32,7 @@ pub fn ManaSymbol<'a>(cx: Scope<'a>, mana_type: ManaType, on_clicked: EventHandl
     // PLAINS
     if *mana_type == ManaType::Plains {
         cx.render(rsx!(
-                svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                svg { version: VERSION , xmlns: XMLNS, x: X, y: Y, width: WIDTH, height: HEIGHT, view_box: VIEW_BOX, enable_background: ENABLE_BACKGROUND,
                     // onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); if *selected.get() {println!("Selected");} else { println!("Not selected");}},
                     onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
@@ -79,7 +79,7 @@ pub fn ManaSymbol<'a>(cx: Scope<'a>, mana_type: ManaType, on_clicked: EventHandl
                 // ISLAND
     else if *mana_type == ManaType::Island {
         cx.render(rsx!(
-                svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                svg { version: VERSION , xmlns: XMLNS, x: X, y: Y, width: WIDTH, height: HEIGHT, view_box: VIEW_BOX, enable_background: ENABLE_BACKGROUND,
                     onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(420,0)",
@@ -98,7 +98,7 @@ pub fn ManaSymbol<'a>(cx: Scope<'a>, mana_type: ManaType, on_clicked: EventHandl
     }
     else if *mana_type == ManaType::Swamp {
         cx.render(rsx!(
-                svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                svg { version: VERSION , xmlns: XMLNS, x: X, y: Y, width: WIDTH, height: HEIGHT, view_box: VIEW_BOX, enable_background: ENABLE_BACKGROUND,
                     onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(315,0)",
@@ -137,7 +137,7 @@ pub fn ManaSymbol<'a>(cx: Scope<'a>, mana_type: ManaType, on_clicked: EventHandl
     }
     else if *mana_type == ManaType::Mountain {
         cx.render(rsx!(
-                svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                svg { version: VERSION , xmlns: XMLNS, x: X, y: Y, width: WIDTH, height: HEIGHT, view_box: VIEW_BOX, enable_background: ENABLE_BACKGROUND,
                     onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(210,0)",
@@ -176,7 +176,7 @@ pub fn ManaSymbol<'a>(cx: Scope<'a>, mana_type: ManaType, on_clicked: EventHandl
     }
     else {
         cx.render(rsx!(
-                svg { version: {VERSION}, xmlns: {XMLNS}, x: {X}, y: {Y}, width: {WIDTH}, height: {HEIGHT}, view_box: {VIEW_BOX}, enable_background: {ENABLE_BACKGROUND},
+                svg { version: VERSION , xmlns: XMLNS, x: X, y: Y, width: WIDTH, height: HEIGHT, view_box: VIEW_BOX, enable_background: ENABLE_BACKGROUND,
                     onclick: move |event| { selected.set(!*selected.get()); on_clicked.call(*selected.get()); },
                     g {
                         transform: "translate(105,0)",
